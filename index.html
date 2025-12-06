@@ -10,34 +10,14 @@
 	</head>
 	<body>
 		<section
-			x-data="{
-				todos: [],
-				newTodo: '',
-				addTodo: function() {
-					this.todos.push({
-						id: this.todos.length + 1,
-						body: this.newTodo,
-						completed: false
-					});
-
-					this.newTodo = '';
-				},
-				deleteTodo: function(todo) {
-					let position = this.todos.indexOf(todo);
-
-					this.todos.splice(position, 1);
-				},
-				get activeTodos() {
-					return this.todos.filter(todo => !todo.completed);
-				}
-			}"
+			x-data="todoApp"
 			class="todoapp"
 		>
 			<header class="header">
 				<h1>todos</h1>
 				<input
 					x-model="newTodo"
-					@keyup.enter="addTodo()"
+					x-on:keyup.enter="addTodo()"
 					type="text"
 					class="new-todo"
 					placeholder="What needs to be done?"
@@ -49,24 +29,32 @@
 				<input id="toggle-all" class="toggle-all" type="checkbox">
 				<label for="toggle-all">Mark all as complete</label>
 				<ul class="todo-list">
-					<!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
-
-<!--					<li class="completed">-->
-<!--						<div class="view">-->
-<!--							<input class="toggle" type="checkbox" checked aria-label="Mark todo as complete">-->
-<!--							<label>Learn Alpine.js</label>-->
-<!--							<button class="destroy"></button>-->
-<!--						</div>-->
-<!--						<input class="edit" value="Create a TodoMVC template" aria-label="Edit todo">-->
-<!--					</li>-->
-					<template x-for="todo in todos" x-bind:key="todo.id">
-						<li x-bind:class="todo.completed && 'completed'">
+					<template x-for="todo in filteredTodos" x-bind:key="todo.id">
+						<li
+							x-bind:class="{
+								'completed': todo.completed,
+								'editing': todo === editingTodo
+							}"
+						>
 							<div class="view">
-								<input x-on:click="todo.completed = !todo.completed;" class="toggle" type="checkbox" aria-label="Mark todo as complete">
-								<label x-text="todo.body"></label>
+								<input
+									x-model="todo.completed"
+									x-on:click="todo.completed = !todo.completed"
+									class="toggle"
+									type="checkbox"
+									aria-label="Mark todo as complete"
+								>
+								<label x-text="todo.body" x-on:dblclick="editTodo(todo)"></label>
 								<button x-on:click="deleteTodo(todo)" class="destroy"></button>
 							</div>
-							<input class="edit" value="Rule the web" aria-label="Edit todo">
+							<input
+								class="edit"
+								x-model="todo.body"
+								x-on:keyup.enter="updateTodo(todo)"
+								x-on:keyup.escape="revertEdit(todo)"
+								x-ref="editField"
+								aria-label="Edit todo"
+							>
 						</li>
 					</template>
 				</ul>
@@ -76,21 +64,44 @@
 				<!-- Remove this if you don't implement routing -->
 				<ul class="filters">
 					<li>
-						<a class="selected" href="#/">All</a>
+						<a
+							x-on:click.prevent="filter = 'all'"
+							x-bind:class="{ 'selected': filter === 'all' }"
+							href="/"
+						>
+							All
+						</a>
 					</li>
 					<li>
-						<a href="#/active">Active</a>
+						<a
+							x-on:click.prevent="filter = 'active'"
+							x-bind:class="{ 'selected': filter === 'active' }"
+							href="/active"
+						>
+							Active
+						</a>
 					</li>
 					<li>
-						<a href="#/completed">Completed</a>
+						<a
+							x-on:click.prevent="filter = 'completed'"
+							x-bind:class="{ 'selected': filter === 'completed' }"
+							href="/completed"
+						>
+							Completed
+						</a>
 					</li>
 				</ul>
-				<!-- Hidden if no completed items are left ↓ -->
-				<button class="clear-completed">Clear Completed</button>
+				<button
+					x-show="completedTodos.length"
+					x-on:click="todos = activeTodos"
+					class="clear-completed"
+				>
+					Clear Completed
+				</button>
 			</footer>
 		</section>
 		<footer class="info">
-			<p>Double-click to edit a todo</p>
+			<p>Double-click a todo to edit, press Esc to revert changes</p>
 			<p>Created by <a href="https://github.com/mdsadid">Md. Sadid Hasan Rakib</a></p>
 			<p>Part of <a href="https://todomvc.com/">TodoMVC</a></p>
 		</footer>
