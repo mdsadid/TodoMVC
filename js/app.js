@@ -2,8 +2,15 @@ import Alpine from 'alpinejs'
 
 window.Alpine = Alpine
 
+window.todoStore = {
+	todos: JSON.parse(localStorage.getItem('todo-mvc') ?? '[]'),
+	save: function () {
+		localStorage.setItem('todo-mvc', JSON.stringify(this.todos))
+	}
+}
+
 Alpine.data('todoApp', () => ({
-	todos: [],
+	...todoStore,
 	newTodo: '',
 	editingTodo: null,
 	filter: 'all',
@@ -11,10 +18,12 @@ Alpine.data('todoApp', () => ({
 		if (!this.newTodo.trim()) return
 
 		this.todos.push({
-			id: this.todos.length + 1,
+			id: Date.now(),
 			body: this.newTodo,
 			completed: false
 		});
+
+		this.save()
 
 		this.newTodo = ''
 	},
@@ -23,6 +32,8 @@ Alpine.data('todoApp', () => ({
 
 		if (position !== -1) {
 			this.todos.splice(position, 1)
+
+			this.save()
 		}
 	},
 	editTodo: function (todo) {
@@ -30,12 +41,18 @@ Alpine.data('todoApp', () => ({
 
 		this.editingTodo = todo
 
-		this.$nextTick(() => this.$refs.editField.focus())
+		this.$nextTick(() => {
+			const input = document.querySelector('li.editing input.edit')
+
+			input?.focus()
+		})
 	},
 	updateTodo: function (todo) {
 		if (todo.body.trim() === '') {
 			this.deleteTodo(todo)
 		}
+
+		this.save()
 
 		this.editingTodo = null
 	},
@@ -45,6 +62,23 @@ Alpine.data('todoApp', () => ({
 		delete todo.prevBody
 
 		this.editingTodo = null
+	},
+	toggleTodoCompletion: function (todo) {
+		todo.completed = !todo.completed
+
+		this.save()
+	},
+	toggleAllTodos: function () {
+		let allCompleted = this.isAllCompleted
+
+		this.todos.forEach((todo) => todo.completed = !allCompleted)
+
+		this.save()
+	},
+	clearCompletedTodos: function () {
+		this.todos = this.activeTodos
+
+		this.save()
 	},
 	get activeTodos() {
 		return this.todos.filter(todo => !todo.completed)
@@ -58,6 +92,9 @@ Alpine.data('todoApp', () => ({
 			active: this.activeTodos,
 			completed: this.completedTodos,
 		}[this.filter]
+	},
+	get isAllCompleted() {
+		return this.todos.length === this.completedTodos.length
 	}
 }))
 

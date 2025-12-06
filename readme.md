@@ -1,19 +1,52 @@
-# TodoMVC App Template
+# TodoMVC with Alpine.js
 
-> Template used for creating [TodoMVC](http://todomvc.com) apps
+A simple, lightweight TodoMVC application built using **Alpine.js**.
+This project demonstrates a clean implementation of a todo app with local storage, editing, filtering, and smooth UX.
 
-![](https://github.com/tastejs/todomvc-app-css/raw/master/screenshot.png)
+---
 
+## Features
 
-## Getting started
+- Add, edit, and delete todos
+- Mark todos as completed or active
+- Filter todos: All, Active, Completed
+- Clear all completed todos
+- Auto-save todos in **localStorage** to persist data
+- Auto-focus when editing a todo
+- Click outside to cancel editing
+- Responsive and minimal UI
 
-- Read the [Application Specification](https://github.com/tastejs/todomvc/blob/master/app-spec.md) before touching the template.
+---
 
-- Delete this file and rename `app-readme.md` to `readme.md` and fill it out.
+## Installation
 
-- Clone this repo and install the dependencies with [npm](https://npmjs.com) by running: `npm install`.
+Clone the repository:
 
+```
+git clone git@github.com:mdsadid/TodoMVC.git
+cd TodoMVC
+```
 
-## License
+Install dependencies:
 
-<a rel="license" href="http://creativecommons.org/licenses/by/4.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/4.0/80x15.png" /></a><br />This <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" rel="dct:type">work</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://sindresorhus.com" property="cc:attributionName" rel="cc:attributionURL">TasteJS</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/deed.en_US">Creative Commons Attribution 4.0 International License</a>.
+```
+npm install
+```
+
+Run the project:
+
+```
+npm run dev
+```
+
+Open `http://localhost:5173` in your browser or serve it via a local server.
+
+## Usage
+
+- **Add a todo:** Type in the input field and press **ENTER**.
+- **Edit a todo:** Double-click a todo, make your changes, then press **ENTER** to save or **ESC** to cancel.
+- **Delete a todo:** Click the **×** icon next to a todo.
+- **Mark as complete:** Click the checkbox next to a todo.
+- **Toggle all todos:** Click the "Mark all as complete" checkbox.
+- **Filter todos:** Use the footer links to view All, Active, or Completed todos.
+- **Clear completed todos:** Click the "Clear Completed" button.

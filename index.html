@@ -26,7 +26,13 @@
 				>
 			</header>
 			<section class="main" x-show="todos.length">
-				<input id="toggle-all" class="toggle-all" type="checkbox">
+				<input
+					x-model="isAllCompleted"
+					x-on:click="toggleAllTodos()"
+					id="toggle-all"
+					class="toggle-all"
+					type="checkbox"
+				>
 				<label for="toggle-all">Mark all as complete</label>
 				<ul class="todo-list">
 					<template x-for="todo in filteredTodos" x-bind:key="todo.id">
@@ -35,11 +41,12 @@
 								'completed': todo.completed,
 								'editing': todo === editingTodo
 							}"
+							x-on:click.away="todo === editingTodo && revertEdit(todo)"
 						>
 							<div class="view">
 								<input
 									x-model="todo.completed"
-									x-on:click="todo.completed = !todo.completed"
+									x-on:click="toggleTodoCompletion(todo)"
 									class="toggle"
 									type="checkbox"
 									aria-label="Mark todo as complete"
@@ -52,7 +59,6 @@
 								x-model="todo.body"
 								x-on:keyup.enter="updateTodo(todo)"
 								x-on:keyup.escape="revertEdit(todo)"
-								x-ref="editField"
 								aria-label="Edit todo"
 							>
 						</li>
@@ -60,8 +66,9 @@
 				</ul>
 			</section>
 			<footer class="footer" x-show="todos.length">
-				<span class="todo-count"><strong x-text="activeTodos.length"></strong> items left</span>
-				<!-- Remove this if you don't implement routing -->
+				<span class="todo-count">
+					<strong x-text="activeTodos.length"></strong> <span x-text="activeTodos.length === 1 ? 'item' : 'items'"></span> left
+				</span>
 				<ul class="filters">
 					<li>
 						<a
@@ -93,7 +100,7 @@
 				</ul>
 				<button
 					x-show="completedTodos.length"
-					x-on:click="todos = activeTodos"
+					x-on:click="clearCompletedTodos()"
 					class="clear-completed"
 				>
 					Clear Completed
@@ -101,7 +108,8 @@
 			</footer>
 		</section>
 		<footer class="info">
-			<p>Double-click a todo to edit, press Esc to revert changes</p>
+			<p>Type a todo and press Enter to save it</p>
+			<p>Double-Click a todo to edit, press Esc to revert changes</p>
 			<p>Created by <a href="https://github.com/mdsadid">Md. Sadid Hasan Rakib</a></p>
 			<p>Part of <a href="https://todomvc.com/">TodoMVC</a></p>
 		</footer>
