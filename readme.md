@@ -11,8 +11,8 @@ This project demonstrates a clean implementation of a todo app with local storag
 - Mark todos as completed or active
 - Filter todos: All, Active, Completed
 - Clear all completed todos
-- Auto-save todos in **localStorage** to persist data
-- Auto-focus when editing a todo
+- Auto save todos in **localStorage** to persist data
+- Autofocus when editing a todo
 - Click outside to cancel editing
 - Responsive and minimal UI
 
@@ -44,9 +44,9 @@ Open `http://localhost:5173` in your browser or serve it via a local server.
 ## Usage
 
 - **Add a todo:** Type in the input field and press **ENTER**.
-- **Edit a todo:** Double-click a todo, make your changes, then press **ENTER** to save or **ESC** to cancel.
+- **Edit a todo:** Double-Click a todo, make your changes, then press **ENTER** to save or **ESC** to cancel.
 - **Delete a todo:** Click the **×** icon next to a todo.
 - **Mark as complete:** Click the checkbox next to a todo.
-- **Toggle all todos:** Click the "Mark all as complete" checkbox.
+- **Toggle all todos:** Click the **∨** icon to toggle all.
 - **Filter todos:** Use the footer links to view All, Active, or Completed todos.
 - **Clear completed todos:** Click the "Clear Completed" button.
